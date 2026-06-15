@@ -22,8 +22,7 @@ The analysis answers four business questions posed by the Customer Experience di
 | Component | Library / Model |
 |-----------|----------------|
 | Sentiment Analysis | `cardiffnlp/twitter-roberta-base-sentiment-latest` (RoBERTa) |
-| Topic Modeling (classical) | NMF + TF-IDF (`scikit-learn`) |
-| Topic Modeling (neural) | BERTopic (`sentence-transformers` + UMAP + HDBSCAN) |
+| Topic Modeling | BERTopic (`sentence-transformers` + UMAP + HDBSCAN) |
 | Embeddings | `all-MiniLM-L6-v2` (Sentence Transformers) |
 | Data manipulation | `pandas`, `numpy` |
 | Visualizations | `matplotlib`, `seaborn`, `wordcloud` |
@@ -43,18 +42,33 @@ The analysis answers four business questions posed by the Customer Experience di
 
 ---
 
+## Topics Identified
+
+BERTopic identified 5 thematic clusters across the 600-review corpus (Xero + 5 competitors):
+
+| Topic | Label | Key terms |
+|-------|-------|-----------|
+| 0 | **Problemas con pagos y cobros** | money, pay, payment, card, issue |
+| 1 | **Soporte técnico y resolución de incidencias** | terminal, phone, problem, sorted, trying |
+| 2 | **Experiencia de atención al cliente** | helpful, friendly, clear, lovely, brilliant |
+| 3 | **Cumplimiento PCI y configuración de terminal** | compliance, pci, card machine, worst card |
+| 4 | **Calidad y velocidad de respuesta** | response, quick, query, timely, efficient |
+
+---
+
 ## Project Structure
 
 ```
 Proyecto Módulo/
-├── analisis_xero_trustpilot.ipynb   # Main analysis notebook
-├── trustpilot-reviews-123k.csv      # Dataset (not tracked in git)
-├── README.md                        # This file
-├── README_personal.md               # Technical deep-dive notes
-└── context/                         # Academic background (course materials)
+├── analisis_xero_trustpilot.ipynb      # Main analysis notebook
+├── presentacion_xero_trustpilot.pptx   # Slide deck (5 min)
+├── trustpilot-reviews-123k.csv         # Dataset (not tracked in git)
+├── README.md                           # This file
+├── README_personal.md                  # Technical deep-dive notes
+└── context/                            # Academic background (course materials)
     ├── 09_Deep_Learning_ev.pdf
     ├── 10_NLP_ev (1).pdf
-    └── [notebooks de referencia del curso]
+    └── [course reference notebooks]
 ```
 
 ---
@@ -74,9 +88,9 @@ source venv/bin/activate
 ### 2. Install dependencies
 
 ```bash
-pip install transformers torch scikit-learn pandas numpy matplotlib seaborn wordcloud
+pip install transformers torch pandas numpy matplotlib seaborn wordcloud regex
 pip install bertopic sentence-transformers umap-learn hdbscan
-pip install regex jupyter
+pip install jupyter
 ```
 
 > First execution downloads the RoBERTa model (~500 MB) and `all-MiniLM-L6-v2` (~90 MB) from HuggingFace Hub. Subsequent runs use the local cache.
@@ -91,7 +105,7 @@ Copy `trustpilot-reviews-123k.csv` to the same directory as the notebook.
 jupyter notebook analisis_xero_trustpilot.ipynb
 ```
 
-Run cells sequentially. Expected total runtime (CPU): **15–40 minutes** depending on hardware (the sentiment inference loop is the bottleneck).
+Run cells sequentially. After Section 8 executes, inspect the topic keywords and update the `TOPIC_LABELS` dictionary before continuing. Expected total runtime (CPU): **15–40 minutes** (sentiment inference is the bottleneck).
 
 ---
 
@@ -101,15 +115,15 @@ Run cells sequentially. Expected total runtime (CPU): **15–40 minutes** depend
 |---------|-------------|
 | 0. Installation | Optional dependency install via `%pip` |
 | 1. Libraries | Imports and global style settings |
-| 2. Configuration | `TARGET`, `COMPETITORS`, `N_TOPICS` and other parameters |
+| 2. Configuration | `TARGET`, `COMPETITORS`, `N_TOPICS`, `DOMAIN_STOP_WORDS` |
 | 3. Data Loading | CSV ingestion, descriptive stats, star-bias verification |
-| 4. Linguistic Exploration | Pattern detection with `regex`, length distribution |
+| 4. Linguistic Exploration | Pattern detection with `regex` (docs hit, % docs, total occurrences) |
 | 5. Text Cleaning | Preprocessing pipeline (URLs, whitespace, non-ASCII) |
-| 6. Corpus Construction | Filtering by sector, train/analysis split |
-| 7. Sentiment Analysis | RoBERTa inference, global and comparative visualizations |
-| 8. Topic Modeling | NMF + TF-IDF (§8.1) and BERTopic (§8.2), cross-validation |
-| 9. Sentiment × Topic | Net Sentiment Score (NSS) per topic, competitive benchmark |
-| 10. Conclusions | Executive summary, priority improvement areas |
+| 6. Corpus Construction | Filter to 600 reviews (Xero + 5 competitors) |
+| 7. Sentiment Analysis | RoBERTa inference in batches, global and comparative visualizations |
+| 8. Topic Modeling | BERTopic (embeddings → UMAP → HDBSCAN), WordClouds, topic distribution |
+| 9. Sentiment × Topic | NSS per topic, competitive heatmap, review examples |
+| 10. Conclusions | Automated executive summary, strategic positioning chart |
 
 ---
 
@@ -119,8 +133,8 @@ Run cells sequentially. Expected total runtime (CPU): **15–40 minutes** depend
 NSS = % positive reviews − % negative reviews  (per topic)
 ```
 
-- NSS > 0 → the topic generates more satisfaction than dissatisfaction
-- NSS < 0 → priority area for improvement
+- **NSS > 0** → topic generates more satisfaction than dissatisfaction
+- **NSS < 0** → priority area for improvement; benchmark against best competitor
 
 ---
 

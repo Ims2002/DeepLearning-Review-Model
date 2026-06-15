@@ -1,13 +1,9 @@
-
 venv/
-
 .venv/
-
 env/
-
 ENV/
-
 README_personal.md
+trustpilot-reviews-123k.csv
 
 # Python
 __pycache__/
