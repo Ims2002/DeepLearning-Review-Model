@@ -1,53 +1,53 @@
-# Trustpilot Review Analysis — Xero (Business Services)
+# Análisis de Reseñas Trustpilot — Xero (Business Services)
 
-**Deep Learning Practical Case · Machine Learning Module Final Project**
-
----
-
-## Overview
-
-This project implements an end-to-end **NLP pipeline** to analyze 100 Trustpilot reviews for [Xero](https://www.xero.com) (cloud accounting platform) and benchmark them against 5 competitors in the Business Services sector.
-
-The analysis answers four business questions posed by the Customer Experience director:
-
-1. Are the majority of reviews positive or negative? How does Xero compare to competitors?
-2. What topics/themes do the reviews cover?
-3. For each topic, is sentiment predominantly positive or negative? Where does Xero outperform or underperform competitors?
-4. What are the priority areas for improvement?
+**Caso Práctico Deep Learning · Módulo Final de Machine Learning**
 
 ---
 
-## Tech Stack
+## Descripción
 
-| Component | Library / Model |
-|-----------|----------------|
-| Sentiment Analysis | `cardiffnlp/twitter-roberta-base-sentiment-latest` (RoBERTa) |
+Pipeline de NLP end-to-end para analizar 100 reseñas de Trustpilot de [Xero](https://www.xero.com) (plataforma de contabilidad en la nube) y compararlas con 5 competidores del sector Business Services.
+
+El análisis responde a cuatro preguntas de negocio planteadas por el director de Customer Experience:
+
+1. ¿Las reseñas son mayoritariamente positivas o negativas? ¿Cómo se compara Xero con la competencia?
+2. ¿Qué temas o áreas tratan las reseñas?
+3. Por cada tema, ¿el sentimiento es positivo o negativo? ¿Dónde supera Xero a la competencia y dónde queda por detrás?
+4. ¿Cuáles son las áreas de mejora prioritarias?
+
+---
+
+## Stack Tecnológico
+
+| Componente | Librería / Modelo |
+|------------|------------------|
+| Análisis de sentimiento | `cardiffnlp/twitter-roberta-base-sentiment-latest` (RoBERTa) |
 | Topic Modeling | BERTopic (`sentence-transformers` + UMAP + HDBSCAN) |
 | Embeddings | `all-MiniLM-L6-v2` (Sentence Transformers) |
-| Data manipulation | `pandas`, `numpy` |
-| Visualizations | `matplotlib`, `seaborn`, `wordcloud` |
-| Pattern matching | `regex` (Unicode-aware superset of `re`) |
+| Manipulación de datos | `pandas`, `numpy` |
+| Visualizaciones | `matplotlib`, `seaborn`, `wordcloud` |
+| Detección de patrones | `regex` (superconjunto Unicode de `re`) |
 
-**Python version:** 3.10+
+**Versión Python:** 3.10+
 
 ---
 
 ## Dataset
 
-- **Source:** `trustpilot-reviews-123k.csv` — 123,181 reviews across 1,680 companies and 22 sectors
-- **Target company:** `www.xero.com` (100 reviews)
-- **Competitors analyzed:** `crunch.co.uk`, `www.takepayments.com`, `skrill.com`, `www.clearpay.co.uk`, `eposnow.com`
+- **Fuente:** `trustpilot-reviews-123k.csv` — 123.181 reseñas de 1.680 empresas en 22 sectores
+- **Empresa objetivo:** `www.xero.com` (100 reseñas)
+- **Competidores analizados:** `crunch.co.uk`, `www.takepayments.com`, `skrill.com`, `www.clearpay.co.uk`, `eposnow.com`
 
-> ⚠️ **Methodological note:** Star ratings are **not used** as sentiment labels. The dataset is artificially balanced (exactly 20 reviews per star level per company), which invalidates stars as a supervised signal. Sentiment is inferred exclusively from review text via the RoBERTa model.
+> ⚠️ **Nota metodológica:** Las puntuaciones por estrellas **no se usan** como etiquetas de sentimiento. El dataset está artificialmente balanceado (exactamente 20 reseñas por nivel de estrella por empresa), lo que invalida las estrellas como señal supervisada. El sentimiento se infiere exclusivamente del texto mediante el modelo RoBERTa.
 
 ---
 
-## Topics Identified
+## Topics Identificados
 
-BERTopic identified 5 thematic clusters across the 600-review corpus (Xero + 5 competitors):
+BERTopic identificó 5 clústeres temáticos en el corpus de 600 reseñas (Xero + 5 competidores):
 
-| Topic | Label | Key terms |
-|-------|-------|-----------|
+| Topic | Etiqueta | Términos clave |
+|-------|----------|----------------|
 | 0 | **Problemas con pagos y cobros** | money, pay, payment, card, issue |
 | 1 | **Soporte técnico y resolución de incidencias** | terminal, phone, problem, sorted, trying |
 | 2 | **Experiencia de atención al cliente** | helpful, friendly, clear, lovely, brilliant |
@@ -56,26 +56,27 @@ BERTopic identified 5 thematic clusters across the 600-review corpus (Xero + 5 c
 
 ---
 
-## Project Structure
+## Estructura del Proyecto
 
 ```
 Proyecto Módulo/
-├── analisis_xero_trustpilot.ipynb      # Main analysis notebook
-├── presentacion_xero_trustpilot.pptx   # Slide deck (5 min)
-├── trustpilot-reviews-123k.csv         # Dataset (not tracked in git)
-├── README.md                           # This file
-├── README_personal.md                  # Technical deep-dive notes
-└── context/                            # Academic background (course materials)
+├── analisis_xero_trustpilot.ipynb      # Notebook principal de análisis
+├── presentacion_xero_trustpilot.pptx   # Presentación (5 min)
+├── guion_presentacion.md               # Guión de la presentación
+├── trustpilot-reviews-123k.csv         # Dataset (no incluido en git)
+├── README.md                           # Este archivo
+├── README_personal.md                  # Notas técnicas detalladas
+└── context/                            # Materiales académicos del curso
     ├── 09_Deep_Learning_ev.pdf
     ├── 10_NLP_ev (1).pdf
-    └── [course reference notebooks]
+    └── [notebooks de referencia del curso]
 ```
 
 ---
 
-## How to Run
+## Cómo Ejecutar
 
-### 1. Create and activate a virtual environment
+### 1. Crear y activar un entorno virtual
 
 ```bash
 python -m venv venv
@@ -85,7 +86,7 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-### 2. Install dependencies
+### 2. Instalar dependencias
 
 ```bash
 pip install transformers torch pandas numpy matplotlib seaborn wordcloud regex
@@ -93,51 +94,51 @@ pip install bertopic sentence-transformers umap-learn hdbscan
 pip install jupyter
 ```
 
-> First execution downloads the RoBERTa model (~500 MB) and `all-MiniLM-L6-v2` (~90 MB) from HuggingFace Hub. Subsequent runs use the local cache.
+> La primera ejecución descarga el modelo RoBERTa (~500 MB) y `all-MiniLM-L6-v2` (~90 MB) desde HuggingFace Hub. Las siguientes usan la caché local.
 
-### 3. Place the dataset
+### 3. Colocar el dataset
 
-Copy `trustpilot-reviews-123k.csv` to the same directory as the notebook.
+Copiar `trustpilot-reviews-123k.csv` en el mismo directorio que el notebook.
 
-### 4. Launch Jupyter and run all cells
+### 4. Ejecutar el notebook
 
 ```bash
 jupyter notebook analisis_xero_trustpilot.ipynb
 ```
 
-Run cells sequentially. After Section 8 executes, inspect the topic keywords and update the `TOPIC_LABELS` dictionary before continuing. Expected total runtime (CPU): **15–40 minutes** (sentiment inference is the bottleneck).
+Ejecutar las celdas en orden. Tras la Sección 8, revisar las palabras clave de cada topic y actualizar el diccionario `TOPIC_LABELS` antes de continuar. Tiempo estimado en CPU: **15–40 minutos** (la inferencia de sentimiento es el cuello de botella).
 
 ---
 
-## Notebook Structure
+## Estructura del Notebook
 
-| Section | Description |
+| Sección | Descripción |
 |---------|-------------|
-| 0. Installation | Optional dependency install via `%pip` |
-| 1. Libraries | Imports and global style settings |
-| 2. Configuration | `TARGET`, `COMPETITORS`, `N_TOPICS`, `DOMAIN_STOP_WORDS` |
-| 3. Data Loading | CSV ingestion, descriptive stats, star-bias verification |
-| 4. Linguistic Exploration | Pattern detection with `regex` (docs hit, % docs, total occurrences) |
-| 5. Text Cleaning | Preprocessing pipeline (URLs, whitespace, non-ASCII) |
-| 6. Corpus Construction | Filter to 600 reviews (Xero + 5 competitors) |
-| 7. Sentiment Analysis | RoBERTa inference in batches, global and comparative visualizations |
-| 8. Topic Modeling | BERTopic (embeddings → UMAP → HDBSCAN), WordClouds, topic distribution |
-| 9. Sentiment × Topic | NSS per topic, competitive heatmap, review examples |
-| 10. Conclusions | Automated executive summary, strategic positioning chart |
+| 0. Instalación | Instalación opcional de dependencias vía `%pip` |
+| 1. Librerías | Importaciones y configuración de estilo global |
+| 2. Configuración | `TARGET`, `COMPETITORS`, `N_TOPICS`, `DOMAIN_STOP_WORDS` |
+| 3. Carga de datos | Ingesta del CSV, estadísticas descriptivas, verificación del sesgo por estrellas |
+| 4. Exploración lingüística | Detección de patrones con `regex` (docs afectados, % docs, ocurrencias totales) |
+| 5. Limpieza de texto | Pipeline de preprocesado (URLs, espacios, non-ASCII) |
+| 6. Construcción del corpus | Filtrado a 600 reseñas (Xero + 5 competidores) |
+| 7. Análisis de sentimiento | Inferencia RoBERTa en batches, visualizaciones globales y comparativas |
+| 8. Topic Modeling | BERTopic (embeddings → UMAP → HDBSCAN), WordClouds, distribución de topics |
+| 9. Sentimiento × Topic | NSS por topic, heatmap competitivo, ejemplos de reseñas |
+| 10. Conclusiones | Resumen ejecutivo automatizado, gráfico de posicionamiento estratégico |
 
 ---
 
-## Key Metric: Net Sentiment Score (NSS)
+## Métrica Clave: Net Sentiment Score (NSS)
 
 ```
-NSS = % positive reviews − % negative reviews  (per topic)
+NSS = % reseñas positivas − % reseñas negativas  (por topic)
 ```
 
-- **NSS > 0** → topic generates more satisfaction than dissatisfaction
-- **NSS < 0** → priority area for improvement; benchmark against best competitor
+- **NSS > 0** → el topic genera más satisfacción que insatisfacción
+- **NSS < 0** → área de mejora prioritaria; comparar con el mejor competidor
 
 ---
 
-## License
+## Licencia
 
-Academic project — Evolve Machine Learning Programme. Dataset and course materials are proprietary.
+Proyecto académico — Programa de Machine Learning de Evolve. El dataset y los materiales del curso son de uso propietario.
